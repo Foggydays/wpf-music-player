@@ -15,8 +15,7 @@
       支持控制进度
       
 ## 项目展示
-      我是图片。。。
-![](/wpf-music-player/GitHubImage/Image1.png)
+![image](https://github.com/Foggydays/wpf-music-player/blob/master/GitHubImage/Image1.png)
       
 ## 感想
       开发伊始几乎没有遵循任何设计模式，只为实现其功能，代码混乱不堪
