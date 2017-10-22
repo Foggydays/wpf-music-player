@@ -43,6 +43,20 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ListBox>
+        <Grid Grid.Column="2" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Border BorderThickness="2" BorderBrush="LightGray" Margin="3" Padding="1" CornerRadius="1">
+                <Grid Background="LightGray">
+                    <Border Background="#353535" Width="110" Height="110" CornerRadius="100"/>
+                    <Border Width="55" Height="55" Background="White" CornerRadius="100"/>
+                    <Border BorderThickness="1" BorderBrush="Gray" Width="50" Height="50" CornerRadius="100"/>
+                    <Border BorderThickness="1" BorderBrush="Gray" Width="45" Height="45" CornerRadius="100"/>
+                </Grid>
+            </Border>
+        </Grid>
         <local:PlayControls x:Name="playcontrols"  HorizontalAlignment="Stretch"  Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Loaded="PlayControls_Loaded"/>
     </Grid>
 </Window>

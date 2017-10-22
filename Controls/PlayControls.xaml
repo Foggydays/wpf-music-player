@@ -13,17 +13,25 @@
     </UserControl.Resources>
     <Grid  Background="#06436a" Height="60">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="180"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Border BorderThickness="1" BorderBrush="White" Height="60" Width="60" Background="#353535">
+                <Grid VerticalAlignment="Center">
+                    <Image Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Ellipse Width="30" Height="30" Fill="White"/>
+                    <Border BorderThickness="1" BorderBrush="Gray" Width="28" Height="28" CornerRadius="50"/>
+                    <Border BorderThickness="1" BorderBrush="Gray" Width="24" Height="24" CornerRadius="50"/>
+                </Grid>
+            </Border>
             <local:ImageButton x:Name="lastKey" Margin="3" VerticalAlignment="Center"/>
             <local:ImageButton x:Name="playKey" Margin="3" VerticalAlignment="Center" DataContext="{Binding PlayIcon}"/>
             <local:ImageButton x:Name="nextKey" Margin="3" VerticalAlignment="Center"/>
             <local:ImageButton x:Name="stopKey" Margin="3" VerticalAlignment="Center"/>
         </StackPanel>
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -35,8 +43,8 @@
             <TextBlock FontSize="16" Foreground="White" FontWeight="Black" Text="{Binding Playing.Music.Name}" Name="musictitle" VerticalAlignment="Center" Margin="4,0"/>
             <TextBlock Grid.Column="1" FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="4,0" Foreground="White"
                        Text="{Binding ElementName=timecontrol, Path=Value, Converter={StaticResource valueconverter}}"/>
-            <Slider Grid.ColumnSpan="2" Grid.Row="1" Name="timecontrol" Margin="0,0,0,5"
-                    Value="{Binding Position, Converter={StaticResource secondsconverter}}" Maximum="{Binding MaxTime}">
+            <Slider Grid.ColumnSpan="2" Grid.Row="1" Name="timecontrol" Margin="0,5,0,5"
+                    Value="{Binding Position, Converter={StaticResource secondsconverter}}" Maximum="{Binding MaxTime}"  Style="{DynamicResource SliderStyle1}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
                         <i:InvokeCommandAction Command="{Binding TimeControlButtonDown}"/>
@@ -48,7 +56,7 @@
             </Slider>
         </Grid>
         <Slider Grid.Column="2" Name="volume" Margin="10,0,10,0" VerticalAlignment="Center" 
-                Value="{Binding Volume}" Maximum="1">
+                Value="{Binding Volume}" Maximum="1" Style="{DynamicResource SliderStyle1}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="ValueChanged">
                     <i:InvokeCommandAction Command="{Binding VolumeChangedCommand}"/>
@@ -56,5 +64,5 @@
             </i:Interaction.Triggers>
         </Slider>
     </Grid>
-    
+
 </UserControl>
