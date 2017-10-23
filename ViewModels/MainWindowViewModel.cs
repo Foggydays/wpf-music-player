@@ -42,6 +42,30 @@ namespace MusicPlayer.ViewModels
             }
         }
 
+        private int playOrder;
+
+        public int PlayOrder
+        {
+            get { return playOrder; }
+            set
+            {
+                playOrder = value;
+                RaisePropertyChanged("PlayOrder");
+            }
+        }
+
+        private BitmapImage orderIcon;
+
+        public BitmapImage OrderIcon
+        {
+            get { return orderIcon; }
+            set
+            {
+                orderIcon = value;
+                RaisePropertyChanged("OrderIcon");
+            }
+        }
+
         private TimeSpan position;
 
         public TimeSpan Position
@@ -113,6 +137,7 @@ namespace MusicPlayer.ViewModels
         public DelegateCommand PlayMusicCommand { get; set; }
         public DelegateCommand NextMusicCommand { get; set; }
         public DelegateCommand StopMusicCommand { get; set; }
+        public DelegateCommand PlayOrderCommand { get; set; }
 
         public DelegateCommand TimeControlButtonDown { get; set; }
         public DelegateCommand<Slider> TimeControlButtonUp { get; set; }
@@ -123,8 +148,10 @@ namespace MusicPlayer.ViewModels
             InitPlayList();
             InitMusicList(PlayLists.First());
             play = new MusicPlay();
+            PlayOrder = 0;
             MaxTime = 1;
             PlayIcon = new BitmapImage(new Uri("/Image/full_play.png", UriKind.Relative));
+            OrderIcon = new BitmapImage(new Uri("/Image/full_recycle.png", UriKind.Relative));
             Volume = play.GetVolume();
 
             play.dt = new System.Windows.Threading.DispatcherTimer();
@@ -140,6 +167,7 @@ namespace MusicPlayer.ViewModels
             PlayMusicCommand = new DelegateCommand(PlayMusic);
             NextMusicCommand = new DelegateCommand(NextMusic);
             StopMusicCommand = new DelegateCommand(StopMusic);
+            PlayOrderCommand = new DelegateCommand(ClickPlayOrder);
             TimeControlButtonDown = new DelegateCommand(TimeControlButtonDownExcute);
             TimeControlButtonUp = new DelegateCommand<Slider>(TimeControlButtonUpExcute);
             VolumeChangedCommand = new DelegateCommand(VolumeChanged);
@@ -317,22 +345,39 @@ namespace MusicPlayer.ViewModels
             {
                 Playing = selectedItem.First();
                 int index = MusicList.IndexOf(Playing);
-                if (index < MusicList.Count - 1)
+                if (PlayOrder == 0)
                 {
+                    if (index < MusicList.Count - 1)
+                    {
+                        Playing.IsSelected = false;
+                        Playing = MusicList[++index];
+                        Playing.IsSelected = true;
+                        //System.Threading.Thread.Sleep(100);
+                        PlayMusic(Playing.Music);
+                    }
+                    else
+                    {
+                        Playing.IsSelected = false;
+                        Playing = MusicList.First();
+                        Playing.IsSelected = true;
+                        //System.Threading.Thread.Sleep(100);
+                        PlayMusic(Playing.Music);
+                    }
+                }
+                else if (PlayOrder == 1)
+                {
+                    Random random = new Random();
+                    int select;
+                    do
+                    {
+                        select = random.Next(MusicList.Count);
+                    } while (select == index);
                     Playing.IsSelected = false;
-                    Playing = MusicList[++index];
-                    Playing.IsSelected = true;
-                    System.Threading.Thread.Sleep(100);
+                    Playing = MusicList[select];
+                    playing.IsSelected = true;
                     PlayMusic(Playing.Music);
                 }
-                else
-                {
-                    Playing.IsSelected = false;
-                    Playing = MusicList.First();
-                    Playing.IsSelected = true;
-                    System.Threading.Thread.Sleep(100);
-                    PlayMusic(Playing.Music);
-                }
+                
                 PlayIcon = new BitmapImage(new Uri("/Image/full_pause.png", UriKind.Relative));
             }
         }
@@ -346,6 +391,22 @@ namespace MusicPlayer.ViewModels
             play.dt.Stop();
             play.Stop();
             Position = new TimeSpan();
+        }
+        /// <summary>
+        /// 切换播放模式
+        /// </summary>
+        private void ClickPlayOrder()
+        {
+            if (PlayOrder == 0)
+            {
+                PlayOrder = 1;
+                OrderIcon = new BitmapImage(new Uri("/Image/full_random.png", UriKind.Relative));
+            }
+            else
+            {
+                PlayOrder = 0;
+                OrderIcon = new BitmapImage(new Uri("/Image/full_recycle.png", UriKind.Relative));
+            }
         }
         /// <summary>
         /// 播放音乐的方法
@@ -386,6 +447,11 @@ namespace MusicPlayer.ViewModels
         private void Dt_Tick(object sender, EventArgs e)
         {
             Position = play.GetPosition();
+            if (Position.TotalSeconds == MaxTime)
+            {
+                StopMusic();
+                NextMusic();
+            }
         }
         
         public DelegateCommand ShowDialogCommand { get; set; }

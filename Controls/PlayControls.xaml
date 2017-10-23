@@ -15,6 +15,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="180"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -55,7 +56,8 @@
                 </i:Interaction.Triggers>
             </Slider>
         </Grid>
-        <Slider Grid.Column="2" Name="volume" Margin="10,0,10,0" VerticalAlignment="Center" 
+        <local:ImageButton Grid.Column="2" x:Name="order" Margin="3" VerticalAlignment="Center" DataContext="{Binding OrderIcon}"/>
+        <Slider Grid.Column="3" Name="volume" Margin="10,0,10,0" VerticalAlignment="Center" 
                 Value="{Binding Volume}" Maximum="1" Style="{DynamicResource SliderStyle1}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="ValueChanged">
