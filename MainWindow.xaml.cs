@@ -27,7 +27,7 @@ namespace MusicPlayer
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = mainWindowViewModel;
+            DataContext = mainWindowViewModel;
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)

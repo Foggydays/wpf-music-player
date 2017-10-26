@@ -8,21 +8,10 @@ using System.Threading.Tasks;
 
 namespace MusicPlayer.ViewModels
 {
-    class PlayListItemViewModel : NotificationObject
+    public class PlayListItemViewModel : NotificationObject
     {
         public PlayList PlayList { get; set; }
 
-        private bool isSelected;
-
-        public bool IsSelected
-        {
-            get { return isSelected; }
-            set
-            {
-                isSelected = value;
-                RaisePropertyChanged("IsSelected");
-            }
-        }
-
+        public bool IsSelected { get; set; }
     }
 }

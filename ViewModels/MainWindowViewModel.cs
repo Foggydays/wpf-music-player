@@ -16,8 +16,9 @@ namespace MusicPlayer.ViewModels
 {
     class MainWindowViewModel : NotificationObject
     {
-        public MusicPlay play;
+        private MusicPlay play;
 
+        //正在播放的音乐
         private MusicItemViewModel playing;
 
         public MusicItemViewModel Playing
@@ -42,6 +43,7 @@ namespace MusicPlayer.ViewModels
             }
         }
 
+        //播放顺序
         private int playOrder;
 
         public int PlayOrder
@@ -66,6 +68,7 @@ namespace MusicPlayer.ViewModels
             }
         }
 
+        //播放进度
         private TimeSpan position;
 
         public TimeSpan Position
@@ -78,6 +81,7 @@ namespace MusicPlayer.ViewModels
             }
         }
 
+        //持续时间
         private double maxTime;
 
         public double MaxTime
@@ -90,6 +94,7 @@ namespace MusicPlayer.ViewModels
             }
         }
 
+        //音量
         private double volume;
 
         public double Volume
@@ -102,6 +107,7 @@ namespace MusicPlayer.ViewModels
             }
         }
 
+        //播放列表
         private List<PlayListItemViewModel> playLists;
 
         public List<PlayListItemViewModel> PlayLists
@@ -114,6 +120,7 @@ namespace MusicPlayer.ViewModels
             }
         }
 
+        //音乐列表
         private List<MusicItemViewModel> musicList;
 
         public List<MusicItemViewModel> MusicList
@@ -125,6 +132,20 @@ namespace MusicPlayer.ViewModels
                 RaisePropertyChanged("MusicList");
             }
         }
+
+        //歌词
+        private List<LyricItemViemModel> lyric;
+
+        public List<LyricItemViemModel> Lyric
+        {
+            get { return lyric; }
+            set
+            {
+                lyric = value;
+                RaisePropertyChanged("Lyric");
+            }
+        }
+
 
         public DelegateCommand OpenFileCommand { get; set; }
         public DelegateCommand OpenFolderCommand { get; set; }
@@ -147,6 +168,7 @@ namespace MusicPlayer.ViewModels
         {
             InitPlayList();
             InitMusicList(PlayLists.First());
+            Lyric = new List<LyricItemViemModel>();
             play = new MusicPlay();
             PlayOrder = 0;
             MaxTime = 1;
@@ -155,7 +177,7 @@ namespace MusicPlayer.ViewModels
             Volume = play.GetVolume();
 
             play.dt = new System.Windows.Threading.DispatcherTimer();
-            play.dt.Interval = TimeSpan.FromSeconds(1);
+            play.dt.Interval = TimeSpan.FromSeconds(0.1);
             play.dt.Tick += Dt_Tick;
 
             OpenFileCommand = new DelegateCommand(OpenMusic);
@@ -171,8 +193,6 @@ namespace MusicPlayer.ViewModels
             TimeControlButtonDown = new DelegateCommand(TimeControlButtonDownExcute);
             TimeControlButtonUp = new DelegateCommand<Slider>(TimeControlButtonUpExcute);
             VolumeChangedCommand = new DelegateCommand(VolumeChanged);
-
-            ShowDialogCommand = new DelegateCommand(ShowDialog);
         }
 
         /// <summary>
@@ -185,7 +205,7 @@ namespace MusicPlayer.ViewModels
             {
                 PlayListItemViewModel viewModel = new PlayListItemViewModel();
                 viewModel.PlayList = item;
-                this.PlayLists.Add(viewModel);
+                PlayLists.Add(viewModel);
             }
         }
         /// <summary>
@@ -415,6 +435,7 @@ namespace MusicPlayer.ViewModels
         {
             play.Stop();
             play.Load(new Uri(music.Url));
+            InitLyric(music);
             play.Play();
             System.Threading.Thread.Sleep(500);
             MaxTime = play.GetMusicDuringTime().TotalSeconds;
@@ -444,6 +465,7 @@ namespace MusicPlayer.ViewModels
             play.SetVolume(Volume);
         }
 
+        int i = 0;
         private void Dt_Tick(object sender, EventArgs e)
         {
             Position = play.GetPosition();
@@ -452,12 +474,33 @@ namespace MusicPlayer.ViewModels
                 StopMusic();
                 NextMusic();
             }
+            if (i < Lyric.Count && Position >= Lyric[i].Time && Lyric[i].Playing == false)
+            {
+                Lyric[i].Playing = true;
+                Console.WriteLine(Lyric[i].Time.ToString() + Position.ToString());
+                if (i > 0)
+                {
+                    Lyric[i - 1].Playing = false;
+                }
+                i++;
+            }
         }
-        
-        public DelegateCommand ShowDialogCommand { get; set; }
-        private void ShowDialog()
+
+        /// <summary>
+        /// 初始化歌词
+        /// </summary>
+        /// <param name="music"></param>
+        private void InitLyric(Music music)
         {
-            MessageBox.Show("这个按钮可以用");
+            List<LyricItemViemModel> lyric = new List<LyricItemViemModel>();
+            i = 0;
+            LyricServices lyricSer = new LyricServices(music, null);
+            var lyricLines = lyricSer.LyricLines;
+            foreach (var item in lyricLines)
+            {
+                lyric.Add(new LyricItemViemModel() { Time = item.Key, Lyric = item.Value });
+            }
+            Lyric = lyric;
         }
     }
 }

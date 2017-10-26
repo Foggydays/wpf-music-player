@@ -7,20 +7,10 @@ using System.Threading.Tasks;
 
 namespace MusicPlayer.ViewModels
 {
-    class MusicItemViewModel : NotificationObject
+    public class MusicItemViewModel : NotificationObject
     {
         public Music Music { get; set; }
 
-        private bool isSelected;
-
-        public bool IsSelected
-        {
-            get { return isSelected; }
-            set
-            {
-                isSelected = value;
-                this.RaisePropertyChanged("IsSelected");
-            }
-        }
+        public bool IsSelected { get; set; }
     }
 }
