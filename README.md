@@ -8,14 +8,17 @@
 ## 功能
       支持常见音频文件的播放
       支持基本的播放控制：
-      播放/暂停
-      换曲目
+       播放/暂停
+       曲目切换
+      支持的播放顺序：
+       列表循环
+       随机播放
       支持存储播放列表
       支持文件及文件夹操作
       支持控制进度
       
 ## 项目展示
-![image](https://github.com/Foggydays/wpf-music-player/blob/master/GitHubImage/Image1.png)
+![image](https://github.com/Foggydays/wpf-music-player/blob/master/GitHubImage/Image2.png)
       
 ## 感想
       开发伊始几乎没有遵循任何设计模式，只为实现其功能，代码混乱不堪
